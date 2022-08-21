@@ -17,7 +17,9 @@ class Log extends React.Component {
 
 
   componentDidMount(){
-    this.getLog(this.props.schedule, this.props.command)
+    setInterval(function(){
+      this.getLog(this.props.schedule, this.props.command)
+    }.bind(this),30000);
   }
 
   async getLog(schedule, command){

@@ -83,7 +83,7 @@ const extension = {
         showDialog({
           title: `Schedule Recurring Execution for: ${file.name}`,
           body: addJob,
-          buttons: [Dialog.okButton()]
+          buttons: [Dialog.cancelButton()]
         }).catch(e => console.log(e));
       }
     });

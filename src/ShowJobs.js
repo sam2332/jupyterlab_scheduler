@@ -91,35 +91,36 @@ class Jobs extends React.Component {
   }
 
   render() {
+    const show_none= this.state.jobs.length==0
     return (
       <div>
-        <table style={{
-          "border" : "1px solid black",
-          "borderCollapse": "collapse"
-        }}>
+        <table class="table table-row" id="CronTab_table">
           <thead>
-            <tr style={{"border" : "1px solid black"}}>
-              <th style={{"border" : "1px solid black"}}>Schedule</th>
-              <th style={{"border" : "1px solid black"}}>Script</th>
-              <th style={{"border" : "1px solid black"}}>Command</th>
-              <th style={{"border" : "1px solid black"}}>Log Location</th>
-              <th style={{"border" : "1px solid black"}}>Log</th>
-              <th style={{"border" : "1px solid black"}}>Delete</th>
+            <tr>
+              <th>Schedule</th>
+              <th>Script</th>
+              <th>Command</th>
+              <th>Log Location</th>
+              <th>Log</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
-
+          
             {this.state.jobs.map((job, i)=>(
-              <tr key={i} style={{"border" : "1px solid black"}}>
-                <td style={{"border" : "1px solid black"}}>{job.schedule}</td>
-                <td style={{"border" : "1px solid black"}}>{job.script}</td>
-                <td style={{"border" : "1px solid black"}}>{job.command}</td>
-                <td style={{"border" : "1px solid black"}}>{job.log_file}</td>
-                <td style={{"border" : "1px solid black"}}><button onClick={()=>{this.openLog(job.schedule, job.command)}}>View</button></td>
-                <td style={{"border" : "1px solid black"}}><button onClick={()=>{this.deleteJob(job.schedule, job.command)}}>X</button></td>
+              <tr key={i} >
+                <td>{job.schedule}</td>
+                <td>{job.script}</td>
+                <td>{job.command}</td>
+                <td>{job.log_file}</td>
+                <td><button onClick={()=>{this.openLog(job.schedule, job.command)}}>View</button></td>
+                <td><button onClick={()=>{this.deleteJob(job.schedule, job.command)}}>X</button></td>
 
               </tr>
             ))}
+            {show_none ? <tr>
+                <td colspan='6' class='text-center'>None</td>
+              </tr> : ''}
 
           </tbody>
         </table>

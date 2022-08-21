@@ -32,9 +32,9 @@ class AllJobs(APIHandler):
                         script_match = re.search(r"(?:script:\s)(.*)", job.comment)
                         script = script_match.group(1)
 
-                        schedule_match = re.search(r"(((\d+,)+\d+|(\d+(\/|-)\d+)|\d+|\*) ?){5,7}", str(job))
+                        schedule_match = re.search(r"(((\d+,)+\d+|(\d+(\/|-)\d+)|\d+|\*|\/) ?){5,15}", str(job))
                         schedule = schedule_match.group(0)
-
+                        
                         data.append({
                             "command": command,
                             "log_file": log_file,
@@ -96,7 +96,6 @@ class DeleteJob(APIHandler):
         
 
 class AddJob(APIHandler):
-
     @tornado.web.authenticated
     def post(self):
 
@@ -111,10 +110,13 @@ class AddJob(APIHandler):
 
         command_prefix_portion = "echo \"`date` [Cronjob executing]\" >> {}/{}.log &&".format(LOG_BASE_PATH, cleaned_script_name)
         command_log_portion = ">> {}/{}.log 2>&1".format(LOG_BASE_PATH, cleaned_script_name)
-     
+
+        env_list = ["PATH", "JUPYTER_SECRET_NAME"]
+
         with CronTab(user=os.environ["USER"]) as cron:
             for key, value in os.environ.items():
-                cron.env[key] = value
+                if key in env_list:
+                    cron.env[key] = value
             
             job = cron.new(command="{} {} {}".format(command_prefix_portion, command, command_log_portion), comment=comment)
             job.setall(schedule)
@@ -135,7 +137,6 @@ class ViewLog(APIHandler):
             
             for job in cron:
                 try:
-
                     command_match = re.search(r"(?:^.*\[Cronjob executing\]\"\s>>.*&&\s)(.*?)(?:\s>>)", job.command)
                     command = command_match.group(1)
 
